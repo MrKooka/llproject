@@ -143,5 +143,5 @@ STATICFILES_DIRS = (
 )
 
 
-TOKEN = '1343490039:AAGebVhkPwwBfQ6Km758btACO4i_ypmuckg'
+TOKEN = '1343490039:AAHEwbJqrFEVVXiHmAH2foJf2SVlC2WpmII'
 PROXY_URL = 'https://telegg.ru/orig/bot'

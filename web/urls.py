@@ -1,7 +1,5 @@
 from .views import index_view
-from django.urls import path,include
+from django.urls import path,include,re_path
 urlpatterns = [
-    path('word/', index_view),
-
-
-    ]
+    re_path('^', index_view),
+]

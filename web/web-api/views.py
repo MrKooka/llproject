@@ -1,31 +1,70 @@
-from pprint import pprint as pp
-from django.db.models.query_utils import Q
+from tkinter import W
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
 from rest_framework import status
+from rest_framework import generics
+from rest_framework import status
+from ..utils.uploading import upload_functions
 from .serializers import WordSerializer
 from ..models import Word
 
 
 class GetWords(APIView):
     def get(self, request, format=None):
-        offset = request.query_params.get('offset', None)
-        if offset:
-            query = (Word.objects.filter().all()[int(offset):int(offset)+10])
-            return Response(WordSerializer(query,many=True).data)
-        query = (Word.objects.filter().all()[:20])
+        query = Word.objects.filter().all().order_by('-id')
         return Response(WordSerializer(query,many=True).data)
 
     def post(self, request, format=None):
-        print(request.data)
         serializer = WordSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            w = Word(
+                ru=request.data['ru'],
+                eng=request.data['eng'],
+                context=request.data['context'],
+            )
+
+            filename, bot_path, front_path = upload_functions(w)
+            w.front_path = str(front_path)
+            w.bot_path = str(bot_path/filename)
+            w.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.error_messages)
+        print(serializer.errors)
+        print(serializer.default_error_messages)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class ExistWordView(APIView):
 
+    def get(self, request, *args, **kwargs):
+        word = kwargs.get('w', None)
+        print(word)
+        if word:
+            query = Word.objects.filter(eng__contains=word)
+            print(query)
+            if query:
+                return Response(WordSerializer(query,many=True).data)
+        return Response({'text':'word not exist'}, status=status.HTTP_200_OK)
+
+
+
+class DeleteWordView(generics.DestroyAPIView):
+    queryset = Word.objects.all()
+    serializer_class = WordSerializer
+
+    
+    def delete(self, request, *args, **kwargs):
+        self.destroy(request, *args, **kwargs)
+        data = Word.objects.filter().all().order_by('-id')
+        return Response(WordSerializer(data,many=True).data)
+
+    
+
+
+
+
+
+    
         
     
 

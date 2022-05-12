@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Word,CastomUser,Message
+from .models import Word,Customer,Message
 from .forms import ProfileForm
 
 
-@admin.register(CastomUser)
+@admin.register(Customer)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id','external_id','name')
+    list_display = ('id','chat_id','name')
     form  = ProfileForm
 
     

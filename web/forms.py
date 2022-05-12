@@ -1,8 +1,8 @@
 from django import forms
-from .models import CastomUser
+from .models import Customer
 
 class ProfileForm(forms.ModelForm):
     class Meta:
-        model = CastomUser
-        fields = ('external_id','name')
+        model = Customer
+        fields = ('chat_id','name')
         widgets = {'name':forms.TextInput}
