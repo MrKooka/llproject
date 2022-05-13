@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/build
+
 
 # misc
 .DS_Store
@@ -33,7 +33,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+
 develop-eggs/
 dist/
 downloads/
@@ -106,7 +106,7 @@ target/
 # IPython
 profile_default/
 ipython_config.py
-web-ui/node_modules
+web_ui/node_modules
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
