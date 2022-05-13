@@ -15,6 +15,7 @@ const MyNav = () => {
                             <Link to="/add"><Nav.Link href="#home">Add</Nav.Link></Link>
                             <Link to="/train"><Nav.Link href="#home">Train</Nav.Link></Link>
                             <Link to="/list"><Nav.Link href="#home">List</Nav.Link></Link>
+                            <Link to="/login"><Nav.Link href="#home">Login</Nav.Link></Link>
                         </Nav>
                         <Form.Group>
                             <Form.Control type="text"  />
