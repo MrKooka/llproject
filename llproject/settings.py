@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['2.58.68.40']
+ALLOWED_HOSTS = ['2.58.68.40','127.0.0.1']
 
 
 # Application definition
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'llproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'web-ui/build')],
+        'DIRS': [os.path.join(BASE_DIR,'web_ui/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -143,7 +143,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 # Добавляем вот это:
 STATICFILES_DIRS = (
- os.path.join(BASE_DIR,'web-ui/build/static'),
+ os.path.join(BASE_DIR,'web_ui/build/static'),
 )
 
 
