@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['2.58.68.40','127.0.0.1']
+ALLOWED_HOSTS = ['2.58.68.40','127.0.0.1','my-dictionary.online']
 
 
 # Application definition

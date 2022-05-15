@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Routes,
     Route,
@@ -7,9 +7,24 @@ import {
 import AddWords from './components/AddWords';
 import ListWords from './components/ListWords';
 import Login from './components/Login';
+import Logout from './components/Logout';
+
 import TrainWord from './components/TrainWord';
 
+import { gapi } from "gapi-script"
+
+
+const clientId = "383926561924-0kr85vallh5j759q23i127s0mqor1ihg.apps.googleusercontent.com"
 const AppRouter = () => {
+    useEffect(()=>{
+        const start = ()=>{
+            gapi.client.init({
+                clientId:clientId,
+                scope:""
+            })
+        }
+        gapi.load('client:auth2', start)
+    })
     return (
         <div>
             <Routes>
@@ -18,6 +33,8 @@ const AppRouter = () => {
                 <Route path='train' element={<TrainWord />} />
                 <Route path='list' element={<ListWords/>} />
                 <Route path='login' element={<Login/>}/>
+                <Route path='logout' element={<Logout/>}/>
+
 
                     
 
