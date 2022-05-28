@@ -3,10 +3,20 @@ import { Row, Col } from 'react-bootstrap'
 
 import { GoogleLogout } from 'react-google-login';
 const Login = () => {
+    const [isAuth, setIsAuth] = useState()
     const clientId = "383926561924-0kr85vallh5j759q23i127s0mqor1ihg.apps.googleusercontent.com"
     const onSuccess = (res) => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+
+        setIsAuth(false)
         console.log("Logout success");
     }
+    const onErr = (res) => {
+        console.log("Logout NOT success",res);
+        console.log(localStorage);
+    }
+    
     return (
 
         <div>
@@ -17,6 +27,7 @@ const Login = () => {
                         clientId={clientId}
                         buttonText="Logout"
                         onLogoutSuccess={onSuccess}
+                        onFailure={onErr}
                     ></GoogleLogout>
 
                 </Col>

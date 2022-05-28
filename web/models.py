@@ -1,4 +1,5 @@
 from statistics import mode
+
 from uuid import uuid4
 from django.conf import settings
 from django.db import models
@@ -28,16 +29,20 @@ class Word(models.Model):
     def __str__(self):
         return f'{self.ru}: {self.eng}'
 
-
 class Customer(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
+    # user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
     chat_id = models.PositiveBigIntegerField(unique=True, null=True, verbose_name='chat_id пользователя в tg', )
     name = models.CharField(max_length=255,verbose_name='Имя пользователя')
+    email = models.EmailField(null=True)
     
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         
+    @property
+    def is_authenticated(self):
+        """Всегда возвращает True"""
+        return True
     def __str__(self):
         return  f'#{self.chat_id} | {self.name}'
 

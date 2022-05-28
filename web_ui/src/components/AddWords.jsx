@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import axios from 'axios'
+import { gapi } from "gapi-script"
+
 
 const AddWords = () => {
     const [eng, setEng] = useState('')
     const [ru, setRu] = useState('')
     const [context, setContex] = useState('')
     const [sugList, setSugList] = useState([])
-
 
     const sendForm = (event) => {
         event.preventDefault();
