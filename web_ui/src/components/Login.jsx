@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
+import {useNavigate} from 'react-router-dom';
+
 import axios from 'axios'
 import GoogleLogin from 'react-google-login';
 import { gapi } from "gapi-script"
@@ -8,6 +10,7 @@ import JSON from 'json5'
 const Login = () => {
     const [token, setToken] = useState('')
     const [userId, setUserId] = useState('')
+    const navigate = useNavigate();
 
     const clientId = "383926561924-0kr85vallh5j759q23i127s0mqor1ihg.apps.googleusercontent.com"
     function getCookie(name) {
@@ -60,6 +63,7 @@ const Login = () => {
             })
             
             console.log(res.profileObj.email);
+            navigate('/')
         }
     }
 

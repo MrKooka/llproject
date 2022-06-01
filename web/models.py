@@ -12,7 +12,7 @@ class Word(models.Model):
     ru = models.CharField(max_length=255, verbose_name='Русское слово')
     eng = models.CharField(max_length=255, verbose_name='Английское слово')
     context = models.CharField(max_length=3000, default='', verbose_name='Контекст слова')
-    date = models.DateTimeField(default=datetime.now(), verbose_name='Дата добавления слова')
+    date = models.DateTimeField(auto_now=True, verbose_name='Дата добавления слова')
     reply_date = models.IntegerField(default=datetime.now().timestamp(), verbose_name='Дата и время проверки слова')
     customer = models.ManyToManyField('Customer', related_name='customer', verbose_name='Пользователь')
     is_remember = models.BooleanField(default=False, verbose_name='Выучил ли человек слово или нет')
@@ -71,7 +71,7 @@ class Message(models.Model):
 
 
 class LogModels(models.Model):
-    created = models.DateTimeField(verbose_name='Время лога', default=datetime.now())
+    created = models.DateTimeField(verbose_name='Время лога')
     exc_info = models.CharField(max_length=300,null=True, blank=True,verbose_name='Текст питоновских ошибок')  
     exc_text = models.CharField(max_length=300, null=True, blank=True, verbose_name='Тоже текст питоновских ошибок')
     filename = models.CharField(max_length=255, verbose_name='Имя файла' )

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional,Tuple
 from web.models import Customer
 import jwt
 from django.conf import settings
@@ -57,7 +57,7 @@ class AuthBackend(authentication.BaseAuthentication):
         return self.authenticate_credential(token)
 
 
-    def authenticate_credential(self, token) -> tuple:
+    def authenticate_credential(self, token) -> Tuple[Customer,None]:
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
             print('payload: ',payload)
