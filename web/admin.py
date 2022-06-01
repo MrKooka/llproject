@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Word,Customer,Message
+from .models import Word,Customer,Message,LogModels
 from .forms import ProfileForm
 
 
@@ -16,3 +16,5 @@ class MessageAdmin(admin.ModelAdmin):
 
 # admin.site.register(CastomUser)
 admin.site.register(Word)
+admin.site.register(LogModels)
+

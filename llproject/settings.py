@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from environ import Env
+from web.myLogging import SQLHandler
 
 env = Env()
 env.read_env('.env')
@@ -110,10 +111,9 @@ LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'Europe/Moscow'
 DATE_INPUT_FORMATS = ['%Y-%m-%d %h:%m-%s']
 USE_I18N = True
-
 USE_L10N = True
+USE_TZ = False
 
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -183,3 +183,32 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters':{
+        'webFormater': {
+            'format': '{asctime} - {levelname} - {pathname} - {message} - {lineno}',
+            'style': '{'
+        }
+    },
+    'handlers': {
+        'testHandler': {
+            '()': SQLHandler,
+            'level':'DEBUG',
+            'formatter': 'webFormater',
+            'filename':'debug.log'
+        },
+    
+    },
+    'loggers': {
+        'web': {
+            'handlers': ['testHandler'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+LOGGINT_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'

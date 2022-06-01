@@ -1,3 +1,4 @@
+import email
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,10 +10,17 @@ from rest_framework import generics
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import status
 from rest_framework import viewsets 
+import logging.config
+from logging import Logger
 from ..utils.uploading import upload_functions
 from ..utils.auth.google import check_google_auth
 from .serializers import UserSerializer, WordSerializer,GoogleAuthSerializer
 from ..models import Word
+
+
+logging.config.dictConfig(settings.LOGGING)
+
+webLogger : Logger = logging.getLogger('web')
 
 
 class GetWords(APIView):
@@ -34,19 +42,15 @@ class GetWords(APIView):
             w.bot_path = str(bot_path/filename)
             w.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.error_messages)
-        print(serializer.errors)
-        print(serializer.default_error_messages)
+        webLogger.warning(f"{serializer.error_messages}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ExistWordView(APIView):
 
     def get(self, request, *args, **kwargs):
         word = kwargs.get('w', None)
-        print(word)
         if word:
             query = Word.objects.filter(eng__contains=word)
-            print(query)
             if query:
                 return Response(WordSerializer(query,many=True).data)
         return Response({'text':'word not exist'}, status=status.HTTP_200_OK)
@@ -56,8 +60,6 @@ class ExistWordView(APIView):
 class DeleteWordView(generics.DestroyAPIView):
     queryset = Word.objects.all()
     serializer_class = WordSerializer
-
-    
     def delete(self, request, *args, **kwargs):
         self.destroy(request, *args, **kwargs)
         data = Word.objects.filter().all().order_by('-id')
@@ -72,14 +74,15 @@ class GoogleAuthView(APIView):
 
     def post(self, reqest, *args, **kwargs):
         """Подтверждение авторизации через Google"""
-        print('reqest.data:', reqest.data)
+        email = reqest.data['email']
+        webLogger.debug(f'User auth email: {email}' )
         google_data = GoogleAuthSerializer(data=reqest.data)
         if google_data.is_valid():
             token = check_google_auth(google_data.data)
             return Response(token)
         else:
-            return Response({'err':"Bad google data"})
-            # return AuthenticationFailed(code=403, detail='Bad data Google')
+            # return Response({'err':"Bad google data"})
+            return AuthenticationFailed(code=403, detail='Bad data Google')
 
 
 
@@ -103,14 +106,13 @@ class UpdateWordView(APIView):
         id = reqest.data['id']
         new_word = reqest.data['newWord']
         eng = reqest.data.get('eng',None)
-
         if eng:
             word = Word.objects.get(id=id)
+            webLogger.debug(f'Update слова user: {word.customer.email} | старое слово: {word.eng}')
             word.eng = new_word
             word.save()
             query = Word.objects.filter().all().order_by('-id')
             return Response(WordSerializer(query,many=True).data)
-
         word = Word.objects.get(id=id)
         word.ru = new_word
         word.save()
