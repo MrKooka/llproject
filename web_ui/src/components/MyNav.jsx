@@ -28,29 +28,29 @@ const MyNav = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                        <li class="nav-item active">
-                            <Link to="/add"><a class="nav-link">Add</a></Link>
+                        <li className="nav-item active">
+                            <Link to="/add" className="nav-link">Add</Link>
                         </li>
-                        <li class="nav-item active">
-                            <Link to="/train"><a class="nav-link">Train</a></Link>
+                        <li className="nav-item active">
+                            <Link to="/train" className="nav-link">Train</Link>
                         </li>
-                        <li class="nav-item active">
-                            <Link to="/list"><a class="nav-link">List</a></Link>
+                        <li className="nav-item active">
+                            <Link to="/list" className="nav-link" >List</Link>
                         </li>
                         
                         {!isAuthenticated &&
-                        <li class="nav-item active">
-                            <Link to="/login"><a class="nav-link">Login</a></Link>
+                        <li className="nav-item active">
+                            <Link to="/login" className="nav-link">Login</Link>
                         </li>
                         }
                         {isAuthenticated &&
-                        <li class="nav-item active">
-                            <Link to="/profile"> <a class="nav-link">Profile</a></Link>
+                        <li className="nav-item active">
+                            <Link to="/profile" className="nav-link" >Profile</Link>
                         </li>
                         }
                         {isAuthenticated &&
-                        <li class="nav-item active">
-                        <Link to="/logout"><a class="nav-link" >Logout</a></Link>
+                        <li className="nav-item active">
+                        <Link to="/logout" className="nav-link">Logout</Link>
                         </li>
                         }
                       
