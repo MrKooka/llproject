@@ -54,14 +54,11 @@ class SQLHandler(logging.Handler):
             log_data.update({str(field.attname) : getattr(record,field.attname)})
 
         log_data.update({'message':message})
-        print(log_data)
         log_data_ = format_date(log_data)
 
         log = LogModels(**log_data_)       
-        print("log.created >> ", log.created)
         log.save()
         
-        print("message>>> ",message)
 
 
 

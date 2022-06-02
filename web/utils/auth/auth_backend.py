@@ -5,6 +5,13 @@ from django.conf import settings
 from rest_framework import authentication
 from rest_framework import exceptions
 from datetime import datetime
+import logging
+from logging import Logger
+
+logging.config.dictConfig(settings.LOGGING)
+
+webLogger : Logger = logging.getLogger('web')
+
 class AuthBackend(authentication.BaseAuthentication):
     authentication_header_prefex = 'Token'
     
@@ -32,26 +39,29 @@ class AuthBackend(authentication.BaseAuthentication):
         """
 
         auth_header = authentication.get_authorization_header(request).split()
-        print('auth_header: ',auth_header)
+        webLogger.debug(f'Credentials check auth_header: {auth_header}')
         if not auth_header:
-            print('If not auth_header')
+            webLogger.debug(f'If not auth_header ')
             return None
 
         if not auth_header or auth_header[0].lower() != b'token':
-            print(auth_header[0].lower())
+            webLogger.debug(f'Problem with tiken word')
+
             return None
 
         if len(auth_header) == 1:
             print('1')
+            webLogger.debug(f'Invalid token header. No credential provided')
             raise exceptions.AuthenticationFailed('Invalid token header. No credential provided')
         elif len(auth_header) > 2:
             print('2')
-
+            webLogger.debug('Invalid token header. Token string should not contains spases')
             raise exceptions.AuthenticationFailed('Invalid token header. Token string should not contains spases')
         try:
             token = auth_header[1].decode('utf-8')
             print('Token',token)
         except UnicodeError:
+            webLogger.debug('Invalid token header. Token string should not contains invalid characters')
             print('3')
             raise exceptions.AuthenticationFailed('Invalid token header. Token string should not contains invalid characters')
         return self.authenticate_credential(token)
@@ -62,6 +72,8 @@ class AuthBackend(authentication.BaseAuthentication):
             payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
             print('payload: ',payload)
         except jwt.PyJWTError:
+            webLogger.debug(f'Invalid authentication. Could not decod token.')
+
             print('4')
             raise exceptions.AuthenticationFailed('Invalid authentication. Could not decod token.')
 
@@ -72,6 +84,7 @@ class AuthBackend(authentication.BaseAuthentication):
         try:
             user = Customer.objects.get(id=payload['user_id'])
         except Customer.DoesNotExist:
+            webLogger.debug(f'No user matching this token was found')
             print('6')
             raise exceptions.AuthenticationFailed('No user matching this token was found ')
         return user, None
