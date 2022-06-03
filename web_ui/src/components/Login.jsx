@@ -1,69 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import {useNavigate} from 'react-router-dom';
-
-import axios from 'axios'
+import getCookie from '../utils/browser/getCookie';
 import GoogleLogin from 'react-google-login';
 import { gapi } from "gapi-script"
-import JSON from 'json5'
+import PostService from "../api/postService"
+import {useDispatch} from 'react-redux'
+import {login} from "../store/authSlice"
+import {CLIENTID} from "../settings/settings"
 
 const Login = () => {
-    const [token, setToken] = useState('')
-    const [userId, setUserId] = useState('')
     const navigate = useNavigate();
-
-    const clientId = "383926561924-0kr85vallh5j759q23i127s0mqor1ihg.apps.googleusercontent.com"
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            // console.log('cookies dsf:',cookies);
-            for (let i = 0; i < cookies.length; i++) 
-            {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    // console.log('csrftoken: ',getCookie('csrftoken'));
+    const dispatcher = useDispatch()
+    const clientId = CLIENTID
     const onSuccess = (res)=>{
-        // console.log("Login success! Current user: ", res.profileObj);
-        
-        
     if(gapi.auth.getToken()){
-        
         const accesstoken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token
-        const csrftoken = getCookie('csrftoken')
-        axios({
-            method:'post',
-            url: "http://127.0.0.1:8000/api/google/", 
-            headers:{
-                "Content-Type":"application/json;charset=UTF-8",
-                'X-CSRFToken': csrftoken,
-
-            },
-            data:{
-                email: res.profileObj.email,
-                token: accesstoken
+        const email = res.profileObj.email
+        const name = res.profileObj.name
+        let csrftoken = getCookie('csrftoken')
+        PostService.loginAPI(email, accesstoken, name, csrftoken).then(result =>{
+            const user = {
+                accesstoken:result.data.access_token,
+                userId: result.data.user_id,
+                email: email
             }
-        }).then(data => {
-                console.log(data)
-                localStorage.setItem('token',data.data.access_token)
-                console.log("Backend token >>",data.data.access_token);
-                localStorage.setItem('userId',data.data.user_id)
-                setToken(data.data.access_token)
-                setUserId(data.data.user_id)
-                console.log(token);
-                console.log(userId);
-            })
-            
-            console.log(res.profileObj.email);
-            navigate('/')
+            dispatcher(login(user))
+            navigate('/profile')
+        })
+
         }
     }
 

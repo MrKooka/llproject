@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap'
 import {useNavigate} from 'react-router-dom';
 import { GoogleLogout } from 'react-google-login';
+import {logout} from "../store/authSlice"
+import {useDispatch} from "react-redux"
+import {CLIENTID} from "../settings/settings"
 const Login = () => {
-    const [isAuth, setIsAuth] = useState()
-    const clientId = "383926561924-0kr85vallh5j759q23i127s0mqor1ihg.apps.googleusercontent.com"
+    const dispatcher = useDispatch()
+    const clientId = CLIENTID
     const navigate = useNavigate();
     const onSuccess = (res) => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('userId')
+        dispatcher(logout())
         navigate('/login')
-        setIsAuth(false)
-        console.log("Logout success");
     }
     const onErr = (res) => {
         console.log("Logout NOT success",res);
-        console.log(localStorage);
     }
     
     return (

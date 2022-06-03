@@ -1,25 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Container, Nav, NavDropdown, Form } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-
+import {useSelector} from "react-redux"
 const MyNav = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const isAuthenticatedFunction = ()=>{
-        if (localStorage.getItem('userId')){
-            setIsAuthenticated(true)
-        }
-        console.log(localStorage.getItem('userId'));
-        
-    }
-    useEffect(() => {
-        isAuthenticatedFunction()
-        const userId = localStorage.getItem('userId')
-        if (userId) {
-            setIsAuthenticated(true)
-        }
-        console.log(isAuthenticated);
-    }, [])
-
+    const user = useSelector(state => state.auth.user);
+    const isAuthenticated = user.isAuthenticated
+    
     return (
         <div>
             <Navbar bg="light" expand="lg">
